@@ -1,0 +1,65 @@
+html
+  head 
+    include ./header
+    link(href="../themes/login/login2.css", rel="stylesheet",type="text/css") 
+  body
+    .header
+      .headerWp
+          .logo
+          .line
+          .proName
+            .china 代理商管理平台
+            .english Agent Management Platform
+    .main
+      .mainWp
+          .loginWrapper
+            h1.loginTitle 代理商系统登录
+            .tips 用户名或者密码错误！
+            form.login-form(method='POST', action='#')
+              .input
+                span.icon.usrIc
+                input(type='email', name='user_name', required='', placeholder='用户名')
+              .input
+                span.icon.pwdIc
+                input(type='password', name='user_password', required='', placeholder='密码')
+              input#doLogin(type='button', value='登 录')
+    .footer
+      .footWp
+          .slogan
+          .companyInfo
+            .fs16 广东通莞科技股份有限公司
+            .fs12 电话：0768-22493580 4001076900      网址：http://www.togoodfin.com
+            .fs12 Copyright  2002-2019 19 www.togoodfin.com. Al. All rights reserved.
+    script(type='text/javascript').
+        $(document).ready((function () {
+
+          $('#doLogin').click(function () {
+                var user_name = $("input[name=user_name]").val();
+                var user_password = $("input[name=user_password]").val();
+                if (!user_name || !user_password) {
+                  $(".tips").show()
+                  return;
+                }else{
+                  $(".tips").hide()
+                }
+                $.post('/rest/sys_user/login', {user_name: user_name, user_password: user_password}, function (data) {
+                    //- console.log(data);
+                    if(data.statusCode==300) {
+                       // alertMsg.info(data.message);
+                    } else {
+                        //alertMsg.info("登录成功！");
+                        window.location = "/index";
+                    }
+                }).error(function (data) {
+                    //- console.log(data.responseJSON);
+                    alertMsg.info(data.responseJSON.error);
+                    //- console.log(JSON.stringify(data));
+                });
+            });
+
+            $("body").keydown(function() {
+                if (event.keyCode == "13") {
+                    $('#doLogin').click();
+                }
+            });
+        }));
